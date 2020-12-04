@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>CSCE315 Project 3</title>
+
+  <!--HTML layout-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <!-- map, launch and weather API scripts -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAg1ZGO1GuYHhxstlCWGsEG5ugSJGh7JqA&callback=initMap&libraries=&v=weekly"
+    defer></script>
+  <script src="backend.js"></script>
+  <!--<script src="weather.js"></script> -->
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+    // $(document).ready(function(){
+    //   $("#loadInfo").modal('show');
+    // });
+  </script>
+
+</head>
+
+<body onload="getAPICall()">
+  <nav class="navbar navbar-expand-lg static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+            <img src="logonav.png" alt="" class="img-responsive">
+          </a>
+      <h1 class="brand brand-name navbar-left">Launch Finder</h1>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#loadInfo">About</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Find Launches
+              <span class="sr-only">(current)</span>    
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="news.html">Spaceflight News
+              
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Display window to explain what the website is and how to use it -->
+  <div id="loadInfo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div id="loadInfo" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Launch Tracker</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Launch Tracker is a tool to find upcoming rocket launches all over the world and the news associated with those launches. Along with upcoming launches you 
+            an search for historical missions simply by entering a date range.
+          </p>
+          <h5 class="modal-title">Searching for Launches</h5>
+          <p>The form at the top of the page allows you to select between finding upcoming launches or historical launches. If you are searching for historical launches then
+            enter the two dates you wish to search between in the input boxes. Then with either selection select the number of launches you would like to display(max number is 100) 
+            using the input box labelled as such. If you wish to search for launch by/from a specific country select the checkbox and a country from the dropdown menu. Once you have
+            your search parameters set hit the search button to find launches.
+          </p>
+          <h5 class="modal-title">Using the Map</h5>
+          <p>On the map you will see several markers with a number on them. The markers location corresponds to the location that launch is launching from and the number is its postition
+            on the returned list of results. If more than one launch is occuring at a location the marker will display the first number to appear there and then a + to indicate there are more launches.
+            If you hover over the marker a tooltip will apear that details what launches are occuring from this location.
+          </p>
+          <h5 class="modal-title">Reading the Information</h5>
+          <p>Each launch returned will display the following information if it is available: the mission name, a description of the mission, where it is launching from(pad and launch site),
+            who is providing the launch service, what type of rocket it is launching on, the time it is launching in your local timezone, a countdown to launch, a picture associated with the launch,
+            and an embeded webcast.
+            This webcast will automatically start playing if the cast is live and the launch has not already passed.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <p>   </p>
+    <div class="card" style="border:none">
+      <div class="card-heading">
+        <h2 class="title">Search for Launches</h2>
+      </div>
+      <div class="card-body">
+        <form onsubmit="return false">
+          <div class="form-group">
+            <input type="radio" id="upcoming" name="launchWindow" value="Upcoming" checked>
+            <label for="upcoming">Upcoming Launches</label>
+            <label data-toggle="tooltip" data-placement="right" title="Shows launches happening between now and the future">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+              </svg>
+            </label>
+          </div>
+          <div class="form-group">
+            <input type="radio" id="dates" name="launchWindow" value="Dates">
+            <label for="dates">Previous Launches From:</label>
+            <input type="date" id="beginDate" name="beginDate">
+            <label for="dates">To:</label>
+            <input type="date" id="endDate" name="endDate">
+            <label data-toggle="tooltip" data-placement="right" title="Shows launches happening between two dates">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+              </svg>
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="numLaunchesToDisplay">Maximum Number of Launches to Display</label>
+            <input type="number" id="numLaunchesToDisplay" name="numLaunchesToDisplay" value="10">
+            <label data-toggle="tooltip" data-placement="right" title="Select the number of launches to display below and on the map">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+              </svg>
+            </label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="searchCountry" name="searchCountry" value="searchCountry">
+            <label for="searchCountry">Limit to launches from/by <select id="countryDropdown">
+                                                                <option value="10">Australia</option>
+                                                                <option value="15">Brazil</option>
+                                                                <option value="2">China</option>
+                                                                <option value="7">French Algeria</option>
+                                                                <option value="6">French Guiana</option>
+                                                                <option value="14">India</option>
+                                                                <option value="9">Iran</option>
+                                                                <option value="16">Israel</option>
+                                                                <option value="4">Italy</option>
+                                                                <option value="3">Japan</option>
+                                                                <option value="13">Kazakhstan</option>
+                                                                <option value="8">Marshall Islands</option>
+                                                                <option value="5">New Zealand</option>
+                                                                <option value="11">North Korea</option>
+                                                                <option value="1">Russia</option>
+                                                                <option value="12">South Korea</option>
+                                                                <option value="0">United States</option>
+                                                                <option value="17">Unknown Country</option>
+                                                              </select>
+                                                            </label>
+            <label data-toggle="tooltip" data-placement="right" title="Shows launches from launch sites owned by the selected country">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+              </svg>
+            </label>
+          </div>
+          <button onclick="getAPICall()" class="btn" id="numLaunchesToDisplay">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" >
+      <p style = "text-align: center">Pins on map display mission number and locations of your searching results.</p>
+      <div class="container" id="map" style="border:3px solid #1f0c46;"></div> <!-- map id -->
+    </div>
+  </div>
+
+  <div class="container" id="missions">
+    <p>   </p>
+    <div class="row">
+      <div class="col col-md-6" id="col1">
+          
+      </div>
+      <div class="col col-md-6" id="col2">
+          
+      </div>
+  </div>
+  </div>
+  <!--  formating map -->
+  <style>
+    #map {
+      height: 500px;
+      margin-top: 1%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+     /* user lociton button formating */
+    .custom-map-control-button {
+      appearance: button;
+      background-color: #fff;
+      border: 0;
+      border-radius: 2px;
+      box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      margin: 10px;
+      padding: 0 0.5em;
+      height: 40px;
+      font: 400 18px Roboto, Arial, sans-serif;
+      overflow: hidden;
+    }
+    .custom-map-control-button:hover {
+      background: #ebebeb;
+    }
+  </style>
+
+  <!-- Launch Info -->
+  <div id="launch"></div>
+
+  <!-- Formating launch info -->
+  
+
+
+<style>
+  .navbar {
+  border: 0;
+  letter-spacing: 4px;
+  background-color: #1f0c46;
+  padding-top:0px;
+  padding-bottom:0px;
+  }
+  .btn{
+    color:white;
+    background-color: #1f0c46;
+  }
+  .btn:hover{
+    color:#00e2ba;
+  }
+
+  .navbar.navbar-inverse {
+    border: none;
+  }
+  .navbar .navbar-brand {
+    padding-top: 0px;
+  }
+  .navbar .navbar-brand img {
+    height: 100px;
+  }
+  
+  
+  .navbar li a, .navbar {
+      color: white !important;
+      font-size: 12px;
+      transition: all 0.6s 0s;
+  }
+  
+  .navbar-toggle {
+      background-color: transparent !important;
+      border: 0;
+  }
+  
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color:#00e2ba !important;
+  }
+    </style>
+
+  <!-- weather and weather formating -->
+  <!-- <div class="weather-container">
+    <p style="font-size: 22px; font-weight: bold">Weather</p>
+    <script> document.write</script>
+    <img class="icon">
+    <p class="weather"></p>
+    <p class="temp"></p>
+  </div> -->
+
+  <style>
+    .weather-container {
+      position: relative;
+      right: 0px;
+      width: 120px;
+      height: 150px;
+      border: 1px solid black;
+      background: white;
+      text-align: center;
+    }
+
+    .weather {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    .temp {
+      font-size: 22px;
+      margin: 0;
+      font-weight: bold;
+    }
+  </style>
+
+
+</body>
+
+</html>
