@@ -17,4 +17,4 @@ Each launch returned will display the following information if it is available: 
 
 ## Documentation:
 - `1_Project_Proposal.pdf`: report of the initial proposal and design of the application
-- `source code`: front-end and back-end code the Rocket Launch Tracker website
+- `source code`: directory that has all the front-end and back-end code for the Rocket Launch Tracker website
