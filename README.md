@@ -3,7 +3,7 @@ Team project to make a web-based application that provides easy access to rocket
 
  ## Veiw and use application: http://people.tamu.edu/~ryanmparker/rocket-launch-tracker/
 
-### About the application:
+### About the application
 Launch Tracker is a tool to find upcoming rocket launches all over the world and the news associated with those launches. Along with upcoming launches you an search for historical missions simply by entering a date range.
 
 #### Searching for Launches
