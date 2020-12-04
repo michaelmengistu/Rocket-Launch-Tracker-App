@@ -17,6 +17,6 @@ Each launch returned will display the following information if it is available: 
 
 ## Documentation:
 - `Project_Proposal.pdf`: report of the initial proposal and design of the application
-- `Final_Report.pdf`: report of on our final product
+- `Final_Report.pdf`: report on our final product
 - `source code`: directory that has all the front-end and back-end code for the Rocket Launch Tracker website
 
