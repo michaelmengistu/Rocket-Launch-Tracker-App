@@ -16,5 +16,7 @@ On the map you will see several markers with a number on them. The markers locat
 Each launch returned will display the following information if it is available: the mission name, a description of the mission, where it is launching from(pad and launch site), who is providing the launch service, what type of rocket it is launching on, the time it is launching in your local timezone, a countdown to launch, a picture associated with the launch, and an embeded webcast. This webcast will automatically start playing if the cast is live and the launch has not already passed.
 
 ## Documentation:
-- `1_Project_Proposal.pdf`: report of the initial proposal and design of the application
+- `Project_Proposal.pdf`: report of the initial proposal and design of the application
+- `Final_Report.pdf`: report of on our final product
 - `source code`: directory that has all the front-end and back-end code for the Rocket Launch Tracker website
+
