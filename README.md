@@ -1,8 +1,6 @@
 # Rocket-Launch-Tracker
 Team project to make a web-based application that provides easy access to rocket launches relevant information such as launch schedule, locations, weather conditions, travel methods, and passed launches, so people can easily find out more about rocket launches.
 
-## Veiw and use application: http://people.tamu.edu/~michaelmengistu/rocket-launch-tracker
-
 ### About the application
 Launch Tracker is a tool to find upcoming rocket launches all over the world and the news associated with those launches. Along with upcoming launches, you can search for historical missions simply by entering a date range.
 
